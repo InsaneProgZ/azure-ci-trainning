@@ -1,8 +1,8 @@
 name: Build-Publish
 
 on:
-#  push:
-#    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
   workflow_dispatch:
 jobs:
@@ -25,4 +25,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: yanzingra/product-management:latest,yanzingra/product-management:${{ github.run_number }}
+          tags: yanzingra/training-ci:latest,yanzingra/trainning-ci:${{ github.run_number }}
