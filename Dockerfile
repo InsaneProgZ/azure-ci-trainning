@@ -1,36 +1,26 @@
-# Stage 1: Dependency download
-FROM gradle:jdk21-alpine AS dependencies
+# Use the official Gradle image as a base image
+FROM gradle:8.5.0-jdk21-alpine AS builder
 
-WORKDIR /app
+# Copy the Gradle project files
+COPY --chown=gradle:gradle . /home/gradle/src
 
-COPY build.gradle.kts .
-COPY settings.gradle.kts .
+# Set the working directory
+WORKDIR /home/gradle/src
 
-# Download dependencies
-RUN gradle --refresh-dependencies
+# Build the application
+RUN gradle build --no-daemon
 
-# Stage 2: Build the Project
-FROM dependencies AS build
-
-WORKDIR /app
-
-# Copy the Gradle files and the source code
-COPY --from=dependencies /app .
-
-# Copy the rest of the source code
-COPY src src
-
-# Build the project
-RUN gradle --no-daemon jar
-
-# Stage 2: Build and run
+# Create a smaller image for runtime
 FROM amazoncorretto:21-alpine-jdk
 
+# Set the working directory
 WORKDIR /app
 
-COPY --from=build /app/build/libs/*.jar ./app.jar
-# Expose the port that the application will run on
+# Copy the JAR file from the builder stage
+COPY --from=builder /home/gradle/src/build/libs/*T.jar /app/app.jar
+
+# Expose the port
 EXPOSE 8080
 
 # Command to run the application
-CMD ["java", "-jar", "app"]
+CMD ["java", "-jar", "app.jar"]

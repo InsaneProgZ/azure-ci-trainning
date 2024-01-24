@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-ci
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: training-ci
+  template:
+    metadata:
+      labels:
+        app: training-ci
+    spec:
+      containers:
+        - name: training-ci
+          image: yanzingra/training-ci:latest
+          ports:
+            - containerPort: 8080
