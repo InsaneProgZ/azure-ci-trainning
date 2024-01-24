@@ -1,4 +1,4 @@
-package azure.trainning.ci.controller;
+package TrainningCIAzure.azurecicd.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
